@@ -1,0 +1,14 @@
+{
+    "name": "Flask Development",
+    "dockerFile": "Dockerfile",
+    "settings": {},
+    "extensions": [],
+    "postCreateCommand": "pip install -r requirements.txt",
+    "forwardPorts": [5000],
+    "portsAttributes": {
+        "5000": {
+            "label": "Flask App",
+            "onAutoForward": "notify"
+        }
+    }
+}
