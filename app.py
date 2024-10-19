@@ -1,36 +1,31 @@
 from flask import Flask
-import os
+import subprocess
 from datetime import datetime
 import pytz
-import subprocess
+import os
 
 app = Flask(__name__)
 
 @app.route('/htop')
 def htop():
-    # Fetch system username
+    # Name and Username
+    name = "Chandan Neralgi"  # Replace with your full name
     username = os.getlogin()
     
-    # Fetch server time in IST
+    # Server Time in IST
     ist = pytz.timezone('Asia/Kolkata')
-    server_time = datetime.now(ist).strftime('%Y-%m-%d %H:%M:%S %Z%z')
+    server_time = datetime.now(ist).strftime('%Y-%m-%d %H:%M:%S.%f %Z')
+    
+    # Top Output
+    top_output = subprocess.getoutput('top -bn1')
 
-    # Get top output
-    top_output = subprocess.getoutput("top -b -n 1")
+    # Format and return the response
+    result = f"<h1>Name: {name}</h1>"
+    result += f"<h2>Username: {username}</h2>"
+    result += f"<h2>Server Time (IST): {server_time}</h2>"
+    result += f"<pre>{top_output}</pre>"
 
-    # Generate the response
-    return f"""
-    <html>
-    <body>
-        <h1>System Information</h1>
-        <p><strong>Name:</strong> Chandan</p>
-        <p><strong>Username:</strong> {username}</p>
-        <p><strong>Server Time (IST):</strong> {server_time}</p>
-        <h2>Top Output:</h2>
-        <pre>{top_output}</pre>
-    </body>
-    </html>
-    """
+    return result
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
